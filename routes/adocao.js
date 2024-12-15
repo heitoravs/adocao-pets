@@ -3,7 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const router = express.Router();
 
-// Define os caminhos para os arquivos JSON
 const interessadosPath =
   process.env.NODE_ENV === "production"
     ? path.join("/tmp", "interessados.json")
@@ -19,7 +18,6 @@ const adocoesPath =
     ? path.join("/tmp", "adocoes.json")
     : path.join(__dirname, "../data/adocoes.json");
 
-// Função para carregar os dados de um arquivo
 function carregarDados(caminho) {
   try {
     if (!fs.existsSync(caminho)) {
@@ -32,7 +30,6 @@ function carregarDados(caminho) {
   }
 }
 
-// Função para salvar os dados em um arquivo
 function salvarDados(caminho, dados) {
   try {
     fs.writeFileSync(caminho, JSON.stringify(dados, null, 2));
@@ -41,12 +38,10 @@ function salvarDados(caminho, dados) {
   }
 }
 
-// Rota GET - Exibe o formulário de adoção com listas dinâmicas
 router.get("/lista", (req, res) => {
   const interessados = carregarDados(interessadosPath);
   const pets = carregarDados(petsPath);
 
-  // Criação das opções dos selects
   let interessadosOptions = interessados
     .map((int) => `<option value="${int.nome}">${int.nome}</option>`)
     .join("");
@@ -55,7 +50,6 @@ router.get("/lista", (req, res) => {
     .map((pet) => `<option value="${pet.nome}">${pet.nome}</option>`)
     .join("");
 
-  // HTML de retorno
   res.send(`
     <!DOCTYPE html>
     <html lang="pt-br">
@@ -124,11 +118,9 @@ router.get("/lista", (req, res) => {
   `);
 });
 
-// Rota POST - Registra uma adoção
 router.post("/adotar", (req, res) => {
   const { interessado, pet } = req.body;
 
-  // Validação dos campos
   if (!interessado || !pet) {
     return res.send(`
       <script>
@@ -138,7 +130,6 @@ router.post("/adotar", (req, res) => {
     `);
   }
 
-  // Carregar e salvar a adoção
   const adocoes = carregarDados(adocoesPath);
   const novaAdocao = {
     interessado,
@@ -149,7 +140,6 @@ router.post("/adotar", (req, res) => {
   adocoes.push(novaAdocao);
   salvarDados(adocoesPath, adocoes);
 
-  // Gerar a lista de adoções
   const listaHTML = adocoes
     .map(
       (a) => `
@@ -161,7 +151,6 @@ router.post("/adotar", (req, res) => {
     )
     .join("");
 
-  // Resposta HTML
   res.send(`
     <!DOCTYPE html>
     <html lang="pt-br">
