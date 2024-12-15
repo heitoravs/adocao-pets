@@ -168,6 +168,41 @@ router.post("/adotar", (req, res) => {
     <head>
       <meta charset="UTF-8">
       <title>Lista de Adoções</title>
+       <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f9;
+          margin: 0;
+          padding: 0;
+          text-align: center;
+        }
+        h1 {
+          margin: 20px 0;
+          color: #444;
+        }
+        ul {
+          list-style: none;
+          padding: 0;
+        }
+        li {
+          background-color: #f8f9fa;
+          margin: 10px auto;
+          padding: 10px;
+          border-radius: 5px;
+          max-width: 400px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        a {
+          text-decoration: none;
+          color: #007bff;
+          font-weight: bold;
+          display: inline-block;
+          margin-top: 15px;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      </style>
     </head>
     <body>
       <h1>Registro de Adoções</h1>
