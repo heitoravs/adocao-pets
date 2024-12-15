@@ -3,13 +3,11 @@ const path = require("path");
 const fs = require("fs");
 const router = express.Router();
 
-// Caminho do arquivo JSON para salvar os pets
 const petsPath =
   process.env.NODE_ENV === "production"
     ? path.join("/tmp", "pets.json") // Uso do diretório temporário no Vercel
     : path.join(__dirname, "../data/pets.json");
 
-// Função para carregar os pets cadastrados
 function carregarPets() {
   if (!fs.existsSync(petsPath)) {
     fs.writeFileSync(petsPath, JSON.stringify([]));
@@ -17,16 +15,13 @@ function carregarPets() {
   return JSON.parse(fs.readFileSync(petsPath, "utf-8"));
 }
 
-// Rota GET - Exibe o formulário de cadastro de pets
 router.get("/cadastro", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/cadastroPet.html"));
 });
 
-// Rota POST - Processa o cadastro e exibe a lista de pets
 router.post("/cadastro", (req, res) => {
   const { nome, raca, idade } = req.body;
 
-  // Validação dos campos obrigatórios
   if (!nome || !raca || !idade) {
     return res.send(`
       <script>
@@ -37,12 +32,10 @@ router.post("/cadastro", (req, res) => {
   }
 
   try {
-    // Carrega os pets e adiciona o novo pet
     const pets = carregarPets();
     pets.push({ nome, raca, idade });
     fs.writeFileSync(petsPath, JSON.stringify(pets, null, 2));
 
-    // Gera o HTML da lista de pets cadastrados
     const listaHTML = pets
       .map(
         (pet) =>
@@ -54,7 +47,6 @@ router.post("/cadastro", (req, res) => {
       )
       .join("");
 
-    // Responde com a página de lista de pets
     res.send(`
       <!DOCTYPE html>
       <html lang="pt-br">
